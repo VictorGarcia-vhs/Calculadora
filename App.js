@@ -6,7 +6,34 @@ export default function App() {
   const [resultado, setResultado] = useState('');
 
   const acao_toque = (valor) => {
-    setExpressao(prev => prev + valor);
+    if (valor === 'C') {
+      setExpressao('');
+      setResultado('');
+    } else if (valor === 'DEL') {
+      setExpressao(prev => prev.slice(0, -1));
+    } else if (valor === '=') {
+      funcao_calcular();
+    } else {
+      setExpressao(prev => prev + valor);
+    }
+  };
+
+  const funcao_calcular = () => {
+    try {
+      let processado = expressao
+        .replace(/X/g, '*')
+        .replace(/,/g, '.');
+
+      let res = eval(processado);
+
+      if (!isNaN(res) && isFinite(res)) {
+        setResultado(String(res).replace(/\./g, ','));
+      } else {
+        setResultado('Erro');
+      }
+    } catch{
+      setResultado('Erro');
+    }
   };
 
   const Botao = ({ titulo, branco, largo }) => (
