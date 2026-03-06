@@ -13,16 +13,26 @@ export default function App() {
       setExpressao(prev => prev.slice(0, -1));
     } else if (valor === '=') {
       funcao_calcular();
+    } else if (valor === '√') {
+      adiciona_raiz();
     } else {
       setExpressao(prev => prev + valor);
     }
+  };
+
+  const adiciona_raiz = () => {
+    setExpressao(prev => prev + '√');
   };
 
   const funcao_calcular = () => {
     try {
       let processado = expressao
         .replace(/X/g, '*')
-        .replace(/,/g, '.');
+        .replace(/,/g, '.')
+        .replace(/√([\d.,]+)/g, (match, p1) => {
+          let numero = parseFloat(p1.replace(/,/g, '.'));
+          return numero >= 0 ? `Math.sqrt(${numero})` : `Math.sqrt(0/0)`;
+        });
 
       let res = eval(processado);
 
